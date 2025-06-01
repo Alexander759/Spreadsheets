@@ -131,6 +131,7 @@
     <ClCompile Include="Spreadsheets.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="List.hpp" />
     <ClInclude Include="MyString.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
