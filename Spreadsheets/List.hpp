@@ -8,7 +8,9 @@ class List {
 public:
 	List();
 	List(const List<T>& other);
+	List(List<T>&& other);
 	List<T>& operator=(const List<T>& other);
+	List<T>& operator=(List<T>&& other);
 	~List();
 
 	void add(const T& item);
@@ -16,6 +18,7 @@ public:
 	void clear();
 
 	size_t getLength() const;
+	bool isEmpty() const;
 
 	const T& operator[](size_t index) const;
 	T& operator[](size_t index);
@@ -54,10 +57,38 @@ inline List<T>::List(const List<T>& other) {
 }
 
 template<typename T>
+inline List<T>::List(List<T>&& other) {
+	this->capacity = other.capacity;
+	this->length = other.length;
+	this->content = other.content;
+
+	other.capacity = 0;
+	other.length = 0;
+	other.content = nullptr;
+}
+
+template<typename T>
 inline List<T>& List<T>::operator=(const List<T>& other) {
 	if (this != &other) {
 		this->free();
 		this->copyFrom(other);
+	}
+
+	return *this;
+}
+
+template<typename T>
+inline List<T>& List<T>::operator=(List<T>&& other) {
+	if (this != &other) {
+		this->free();
+
+		this->capacity = other.capacity;
+		this->length = other.length;
+		this->content = other.content;
+
+		other.capacity = 0;
+		other.length = 0;
+		other.content = nullptr;
 	}
 
 	return *this;
@@ -105,6 +136,11 @@ inline void List<T>::clear() {
 template<typename T>
 inline size_t List<T>::getLength() const {
 	return this->length;
+}
+
+template<typename T>
+inline bool List<T>::isEmpty() const {
+	return this->length == 0;
 }
 
 template<typename T>

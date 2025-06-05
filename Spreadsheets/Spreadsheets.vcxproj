@@ -127,10 +127,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="CommandReader.cpp" />
     <ClCompile Include="MyString.cpp" />
     <ClCompile Include="Spreadsheets.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CommandReader.h" />
     <ClInclude Include="List.hpp" />
     <ClInclude Include="MyString.h" />
   </ItemGroup>
