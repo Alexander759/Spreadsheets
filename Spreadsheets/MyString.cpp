@@ -9,6 +9,26 @@ MyString::MyString() {
 	this->content[0] = '\0';
 }
 
+MyString::MyString(size_t num) {
+	size_t numCopy = num;
+
+	int digitsOfNum = 0;
+	do {
+		numCopy /= 10;
+		digitsOfNum++;
+	} while (numCopy > 0);
+
+	this->length = digitsOfNum;
+	this->content = new char[this->length + 1];
+	this->content[this->length] = '\0';
+	for (size_t i = 0; i < length; i++) {
+		this->content[i] = num % 10 + '0';
+		num /= 10;
+	}
+
+	this->reverse();
+}
+
 MyString::MyString(const char* content) {
 	this->length = strlen(content);
 	this->content = new char[this->length + 1];
@@ -83,8 +103,17 @@ void MyString::concat(const MyString& other) {
 	this->length = newLength;
 }
 
+void MyString::reverse() {
+	char swap;
+	for (size_t i = 0; i < length / 2; i++) {
+		swap = this->content[i];
+		this->content[i] = this->content[length - 1 - i];
+		this->content[length - 1 - i] = swap;
+	}
+}
+
 int MyString::indexOf(char symbol) const {
-	for (size_t i = 0; i < length; i++) {
+	for (int i = 0; i < length; i++) {
 		if (this->content[i] == symbol) {
 			return i;
 		}
@@ -118,7 +147,7 @@ MyString MyString::subStr(size_t start, size_t end) {
 List<MyString> MyString::split(char separator) {
 	List<MyString> result;
 
-	int start = 0;
+	size_t start = 0;
 	
 	for (size_t i = 0; i < length; i++) {
 		if (this->content[i] == separator) {
@@ -134,6 +163,113 @@ List<MyString> MyString::split(char separator) {
 	}
 
 	return result;
+}
+
+MyString MyString::toLower() const {
+	MyString result(*this);
+	for (size_t i = 0; i < length; i++) {
+		if ('A' <= result.content[i] && result.content[i] <= 'Z') {
+			result.content[i] = result.content[i] + 'a' - 'A';
+		}
+	}
+
+	return result;
+}
+
+MyString MyString::toUpper() const {
+	MyString result(*this);
+	for (size_t i = 0; i < length; i++) {
+		if ('a' <= result.content[i] && result.content[i] <= 'z') {
+			result.content[i] = result.content[i] + 'A' - 'a';
+		}
+	}
+
+	return result;
+}
+
+bool MyString::isSizeT() const {
+	if (this->length == 0) {
+		return false;
+	}
+
+	size_t prev = 0;
+	size_t max = 1;
+	while (max != prev) {
+		prev = max;
+		max <<= 1;
+		max++;
+	}
+
+	MyString maxSizeTInMyString(max);
+	if (this->length > maxSizeTInMyString.getLength()) {
+		return false;
+	}
+
+	if (this->length == maxSizeTInMyString.length && *this > maxSizeTInMyString) {
+		return false;
+	}
+
+	for (size_t i = 0; i < length; i++) {
+		if (this->content[i] < '0' || this->content[i] > '9') {
+			return false;
+		}
+	}
+
+	return true;
+}
+
+size_t MyString::toSizeT() const {
+	size_t result = 0;
+	for (size_t i = 0; i < length; i++) {
+		if (this->content[i] == ' ') {
+			continue;
+		}
+
+		result *= 10;
+		result += this->content[i] - '0';
+	}
+
+	return result;
+}
+
+bool MyString::isBool() const {
+	return this->toLower() == "true" || this->toLower() == "false";
+}
+
+bool MyString::toBool() const {
+	if (!isBool()) {
+		throw std::exception("Invalid string");
+	}
+
+	return this->toLower() == "true";
+}
+
+int MyString::compareTo(const MyString& other) const {
+	return strcmp(this->content, other.content);
+}
+
+bool MyString::operator==(const MyString& other) const {
+	return compareTo(other) == 0;
+}
+
+bool MyString::operator!=(const MyString& other) const {
+	return compareTo(other) != 0;
+}
+
+bool MyString::operator>(const MyString& other) const {
+	return compareTo(other) > 0;
+}
+
+bool MyString::operator>=(const MyString& other) const {
+	return compareTo(other) >= 0;
+}
+
+bool MyString::operator<(const MyString& other) const {
+	return compareTo(other) < 0;
+}
+
+bool MyString::operator<=(const MyString& other) const {
+	return compareTo(other) <= 0;
 }
 
 MyString MyString::operator+(const MyString& other) const {

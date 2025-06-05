@@ -1,5 +1,4 @@
-#include "CommandReader.h"
-#include "CommandReader.h"
+#include "Reader.h"
 #include <iostream>
 #include <fstream>
 

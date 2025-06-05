@@ -127,14 +127,20 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="CommandReader.cpp" />
+    <ClCompile Include="PropertyBase.cpp" />
+    <ClCompile Include="PropertyBase.h" />
+    <ClCompile Include="Reader.cpp" />
     <ClCompile Include="MyString.cpp" />
-    <ClCompile Include="Spreadsheets.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="TableConfigure.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="CommandReader.h" />
+    <ClInclude Include="Alignment.h" />
+    <ClInclude Include="Property.hpp" />
+    <ClInclude Include="Reader.h" />
     <ClInclude Include="List.hpp" />
     <ClInclude Include="MyString.h" />
+    <ClInclude Include="TableConfigure.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="config.txt" />

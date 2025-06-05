@@ -17,6 +17,9 @@ public:
 	void removeAt(size_t index);
 	void clear();
 
+	template<typename CallableType>
+	T& FirstOrDefault(CallableType func);
+
 	size_t getLength() const;
 	bool isEmpty() const;
 
@@ -217,4 +220,16 @@ inline void List<T>::resize(size_t newCapacity) {
 	delete[] this->content;
 	this->content = newContent;
 	this->capacity = newCapacity;
+}
+
+template<class T>
+template<typename CallableType>
+inline T& List<T>::FirstOrDefault(CallableType func) {
+	for (size_t i = 0; i < length; i++) {
+		if (func(this->content[i])) {
+			return this->content[i];
+		}
+	}
+
+	return this->content[0];
 }
