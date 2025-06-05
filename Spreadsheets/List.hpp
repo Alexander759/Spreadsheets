@@ -14,6 +14,8 @@ public:
 	~List();
 
 	void add(const T& item);
+	void remove(const T& item);
+	int indexOf(const T& item);
 	void removeAt(size_t index);
 	void clear();
 
@@ -110,6 +112,25 @@ inline void List<T>::add(const T& item) {
 
 	this->content[this->length] = item;
 	this->length++;
+}
+
+template<typename T>
+inline void List<T>::remove(const T& item) {
+	int index = this->indexOf(item);
+	if (index != -1) {
+		this->removeAt(index);
+	}
+}
+
+template<typename T>
+inline int List<T>::indexOf(const T& item) {
+	for (size_t i = 0; i < length; i++) {
+		if (this->content[i] == item) {
+			return i;
+		}
+	}
+
+	return -1;
 }
 
 template<typename T>
