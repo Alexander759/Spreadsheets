@@ -127,6 +127,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Cell.cpp" />
     <ClCompile Include="PropertyBase.cpp" />
     <ClCompile Include="PropertyBase.h" />
     <ClCompile Include="Reader.cpp" />
@@ -136,7 +137,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Alignment.h" />
-    <ClInclude Include="Event.h" />
+    <ClInclude Include="Cell.h" />
+    <ClInclude Include="CellType.h" />
+    <ClInclude Include="ChangeContentArgs.h" />
+    <ClInclude Include="Event.hpp" />
     <ClInclude Include="Property.hpp" />
     <ClInclude Include="Reader.h" />
     <ClInclude Include="List.hpp" />
