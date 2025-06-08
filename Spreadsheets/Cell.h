@@ -5,6 +5,8 @@
 #include "ChangeContentArgs.h"
 #include "Position.h"
 
+class Table;
+
 class Cell {
 public:
 	Cell();
@@ -21,8 +23,7 @@ public:
 
 	void setCellDisplayAndType(const MyString& displayContent, CellType type);
 
-	Event<Cell, ChangeContentArgs>& getContentChangedEvent();
-	List<Cell*>& getDependencies();
+	List<Position>& getDependents();
 
 private:
 
@@ -33,15 +34,19 @@ private:
 	static void handleReferenceContent(Cell& cell);
 	static void handleFormulaContent(Cell& cell);
 
-	void changedReference(Cell* sender, ChangeContentArgs* args);
-	void unsubscribeFromEvents();
+	static void addEdge(Cell* reference, Cell* referenced);
+	static void removeEdge(Cell* reference, Cell* referenced);
 
+	static void changedReference(Cell* reciever, const Cell& sender, const ChangeContentArgs& args);
+	void removeOldEdges();
+
+	Table* table;
 	Position position;
 	MyString rawContent;
 	MyString displayContent;
 	CellType type;
-	Event<Cell, ChangeContentArgs> contentChanged;
-	List<Cell*> dependencies;
+	List<Position> gettingFrom;
+	List<Position> givingTo;
 
-	void (*activeFunction)(Cell* sender, ChangeContentArgs* args);
+	void (*activeFunction)(Cell* receiver, const Cell& sender, const ChangeContentArgs& args);
 };

@@ -135,6 +135,8 @@
     <ClCompile Include="Reader.cpp" />
     <ClCompile Include="MyString.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Table.cpp" />
+    <ClCompile Include="Table.h" />
     <ClCompile Include="TableConfigure.cpp" />
   </ItemGroup>
   <ItemGroup>

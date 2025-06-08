@@ -1,4 +1,6 @@
 #include "Cell.h"
+#include "Table.h"
+#include <stdexcept>
 
 Cell::Cell() {
     this->type = CellType::EmptyCell;
@@ -35,15 +37,22 @@ void Cell::setCellDisplayAndType(const MyString& displayContent, CellType type) 
     this->displayContent = displayContent;
     this->type = type;
 
-    this->contentChanged.trigger(this, &args);
+    for (size_t i = 0; i < givingTo.getLength(); i++) {
+        Cell* cellPtr = table->getAtPosition(givingTo[i]);
+        if (cellPtr == nullptr) {
+            givingTo.removeAt(i);
+            i--;
+            continue;
+        }
+
+        if (cellPtr->activeFunction != nullptr) {
+            cellPtr->activeFunction(cellPtr, *this, args);
+        }
+    }
 }
 
-Event<Cell, ChangeContentArgs>& Cell::getContentChangedEvent() {
-    return this->contentChanged;
-}
-
-List<Cell*>& Cell::getDependencies() {
-    return this->dependencies;
+List<Position>& Cell::getDependents() {
+    return this->givingTo;
 }
 
 void Cell::parseRawContent(Cell& cell) {
@@ -71,37 +80,65 @@ void Cell::parseRawContent(Cell& cell) {
 }
 
 void Cell::handleBoolContent(Cell& cell) {
-    cell.unsubscribeFromEvents();
+    cell.removeOldEdges();
     cell.setCellDisplayAndType(cell.rawContent.toUpper(), CellType::Bool);
 }
 
 void Cell::handleDoubleContent(Cell& cell) {
-    cell.unsubscribeFromEvents();
+    cell.removeOldEdges();
     cell.setCellDisplayAndType(cell.rawContent, CellType::Number);
 }
 
 void Cell::handleStringContent(Cell& cell) {
-    cell.unsubscribeFromEvents();
+    cell.removeOldEdges();
     cell.setCellDisplayAndType(cell.rawContent, CellType::String);
 }
 
 void Cell::handleReferenceContent(Cell& cell) {
+    MyString positionInString = cell.rawContent.subStr(cell.rawContent.indexOf('=') + 1, cell.rawContent.getLength() - 1);
+
+    if (!Position::isPosition(positionInString)) {
+        throw std::invalid_argument("Not position");
+    }
+
+    Position positionOfReferencedCell = Position::fromString(positionInString);
+
+    Cell* referencedCell = cell.table->getAtPosition(positionOfReferencedCell);
+
+    Cell::addEdge(&cell, referencedCell);
+
+    cell.activeFunction = changedReference;
 }
 
 void Cell::handleFormulaContent(Cell& cell) {
 }
 
-void Cell::changedReference(Cell* sender, ChangeContentArgs* args) {
-    if (sender == nullptr || args == nullptr) {
+void Cell::addEdge(Cell* gets, Cell* gives) {
+    if (gets == nullptr || gives == nullptr) {
         return;
     }
 
-    this->setCellDisplayAndType(sender->getDisplayContent(), sender->getCellType());
+    gets->gettingFrom.add(gives->getPosition());
+    gives->givingTo.add(gets->getPosition());
 }
 
-void Cell::unsubscribeFromEvents() {
-    for (size_t i = 0; i < this->dependencies.getLength(); i++) {
-        this->dependencies[i]->getContentChangedEvent().unsubscribe(activeFunction);
+void Cell::removeEdge(Cell* gets, Cell* gives) {
+    if (gets == nullptr || gives == nullptr) {
+        return;
+    }
+
+    gives->givingTo.remove(gets->getPosition());
+    gets->gettingFrom.remove(gives->getPosition());
+}
+
+
+void Cell::changedReference(Cell* reciever, const Cell& sender, const ChangeContentArgs& args) {
+    reciever->setCellDisplayAndType(sender.getDisplayContent(), sender.getCellType());
+}
+
+void Cell::removeOldEdges() {
+    for (size_t i = 0; i < this->gettingFrom.getLength(); i++) {
+        Cell::removeEdge(this, table->getAtPosition(this->gettingFrom[i]));
     }
 }
 

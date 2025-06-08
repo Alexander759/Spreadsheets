@@ -1,6 +1,6 @@
 #pragma once
-#include "MyString.h";
-#include "CellType.h";
+#include "MyString.h"
+#include "CellType.h"
 
 
 class ChangeContentArgs {
