@@ -187,6 +187,109 @@ MyString MyString::toUpper() const {
 	return result;
 }
 
+bool MyString::isDouble() const {
+	size_t i = 0;
+
+	while (i < this->length && this->content[i] == ' ') {
+		i++;
+	}
+
+
+	if (i < this->length && (this->content[i] == '-' || this->content[i] == '+')) {
+		i++;
+	}
+
+	bool hasDigitsBefore = false;
+
+	while (i < this->length && this->content[i] != '.' && this->content[i] != ',') {
+		if (this->content[i] < '0' || this->content[i] > '9') {
+			return false;
+		}
+		hasDigitsBefore = true;
+		i++;
+	}
+
+	bool hasDecimalPoint = false;
+	if (i < this->length && (this->content[i] == '.' || this->content[i] == ',')) {
+		hasDecimalPoint = true;
+		i++;
+	}
+
+	bool hasDigitsAfter = false;
+	while (i < this->length && this->content[i] != ' ') {
+		if (this->content[i] < '0' || this->content[i] > '9') {
+			return false;
+		}
+		hasDigitsAfter = true;
+		i++;
+	}
+
+	while (i < this->length && this->content[i] == ' ') {
+		i++;
+	}
+
+	return i == this->length && (hasDigitsBefore || (hasDecimalPoint && hasDigitsAfter));
+}
+
+double MyString::toDouble() const {
+	if (!isDouble()) {
+		throw std::invalid_argument("Couldn't convert to double");
+	}
+
+	size_t leftPart = 0;
+
+	size_t i = 0;
+
+	while (this->content[i] == ' ') {
+		i++;
+	}
+
+	bool isNegative = false;
+	if (this->content[i] == '-') {
+		isNegative = true;
+		i++;
+	}
+	else if (this->content[i] == '+') {
+		i++;
+	}
+
+	while (i < this->length && this->content[i] != '.' && this->content[i] != ',') {
+		if (this->content[i] < '0' || this->content[i] > '9') {
+			throw std::invalid_argument("Couldn't convert to double");
+		}
+
+		leftPart *= 10;
+		leftPart += this->content[i] - '0';
+		i++;
+	}
+
+	if (i < this->length && (this->content[i] == '.' || this->content[i] == ',')) {
+		i++;
+	}
+
+	size_t rightPart = 0;
+
+	double divideBy = 1;
+	while (i < this->length && this->content[i] != ' ') {
+		if (this->content[i] < '0' || this->content[i] > '9') {
+			throw std::invalid_argument("Couldn't convert to double");
+		}
+
+		rightPart *= 10;
+		rightPart += this->content[i] - '0';
+		divideBy *= 10;
+		i++;
+	}
+
+	double result = leftPart + (rightPart / divideBy);
+
+	if (isNegative) {
+		result *= -1;
+	}
+
+	return result;
+}
+
 bool MyString::isSizeT() const {
 	if (this->length == 0) {
 		return false;

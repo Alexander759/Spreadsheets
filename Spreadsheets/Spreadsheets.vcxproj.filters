@@ -36,6 +36,12 @@
     <ClCompile Include="Cell.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Position.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ChangeContentArgs.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MyString.h">
@@ -66,6 +72,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ChangeContentArgs.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Position.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

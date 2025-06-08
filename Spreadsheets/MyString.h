@@ -27,6 +27,9 @@ public:
 	MyString toLower() const;
 	MyString toUpper() const;
 
+	bool isDouble() const;
+	double toDouble() const;
+
 	bool isSizeT() const;
 	size_t toSizeT() const;
 
