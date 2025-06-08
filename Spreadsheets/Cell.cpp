@@ -7,6 +7,14 @@ Cell::Cell() {
     this->activeFunction = nullptr;
 }
 
+void Cell::setTable(Table* table) {
+    if (table == nullptr) {
+        return;
+    }
+
+    this->table = table;
+}
+
 const Position& Cell::getPosition() const {
     return this->position;
 }
@@ -21,6 +29,7 @@ const MyString& Cell::getRawContent() const {
 
 void Cell::setRawContent(const MyString& rawContent) {
     this->rawContent = rawContent;
+    parseRawContent(*this);
 }
 
 const MyString& Cell::getDisplayContent() const {
@@ -37,22 +46,11 @@ void Cell::setCellDisplayAndType(const MyString& displayContent, CellType type) 
     this->displayContent = displayContent;
     this->type = type;
 
-    for (size_t i = 0; i < givingTo.getLength(); i++) {
-        Cell* cellPtr = table->getAtPosition(givingTo[i]);
-        if (cellPtr == nullptr) {
-            givingTo.removeAt(i);
-            i--;
-            continue;
-        }
-
-        if (cellPtr->activeFunction != nullptr) {
-            cellPtr->activeFunction(cellPtr, *this, args);
-        }
-    }
+    this->onChangeContent(args);
 }
 
 List<Position>& Cell::getDependents() {
-    return this->givingTo;
+    return this->dependantTo;
 }
 
 void Cell::parseRawContent(Cell& cell) {
@@ -105,6 +103,14 @@ void Cell::handleReferenceContent(Cell& cell) {
 
     Cell* referencedCell = cell.table->getAtPosition(positionOfReferencedCell);
 
+    if (referencedCell == nullptr) {
+        throw std::invalid_argument("Invalid Position");
+    }
+
+    if (referencedCell->hasPathTo(cell.getPosition())) {
+        throw std::exception("Circular dependancy");
+    }
+
     Cell::addEdge(&cell, referencedCell);
 
     cell.activeFunction = changedReference;
@@ -113,32 +119,97 @@ void Cell::handleReferenceContent(Cell& cell) {
 void Cell::handleFormulaContent(Cell& cell) {
 }
 
-void Cell::addEdge(Cell* gets, Cell* gives) {
-    if (gets == nullptr || gives == nullptr) {
+bool Cell::hasPathTo(const Position& position) {
+    if (this->position == position) {
+        return true;
+    }
+
+    List<Position> visited;
+
+    for (size_t i = 0; i < this->dependsFrom.getLength(); i++) {
+        Cell* cell = table->getAtPosition(this->dependsFrom[i]);
+
+        if (cell == nullptr) {
+            continue;
+        }
+
+        if (cell->hasPathTo(position, visited)) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+bool Cell::hasPathTo(const Position& position, List<Position>& visited) {
+    if (this->position == position) {
+        return true;
+    }
+
+    if (visited.contains(this->position)) {
+        return false;
+    }
+
+    for (size_t i = 0; i < this->dependsFrom.getLength(); i++) {
+        Cell* cell = table->getAtPosition(this->dependsFrom[i]);
+        
+        if (cell == nullptr) {
+            continue;
+        }
+
+        if (cell->hasPathTo(position, visited)) {
+            return true;
+        }
+    }
+
+    visited.add(this->position);
+    return false;
+}
+
+void Cell::onChangeContent(const ChangeContentArgs& args) {
+    for (size_t i = 0; i < this->dependantTo.getLength(); i++) {
+        Cell* cellPtr = table->getAtPosition(dependantTo[i]);
+        if (cellPtr == nullptr) {
+            dependantTo.removeAt(i);
+            i--;
+            continue;
+        }
+
+        if (cellPtr->activeFunction != nullptr) {
+            cellPtr->activeFunction(cellPtr, this, &args);
+        }
+    }
+}
+
+void Cell::addEdge(Cell* dependant, Cell* dependancy) {
+    if (dependant == nullptr || dependancy == nullptr) {
         return;
     }
 
-    gets->gettingFrom.add(gives->getPosition());
-    gives->givingTo.add(gets->getPosition());
+    dependant->dependsFrom.add(dependancy->getPosition());
+    dependancy->dependantTo.add(dependant->getPosition());
 }
 
-void Cell::removeEdge(Cell* gets, Cell* gives) {
-    if (gets == nullptr || gives == nullptr) {
+void Cell::removeEdge(Cell* dependant, Cell* dependancy) {
+    if (dependant == nullptr || dependancy == nullptr) {
         return;
     }
 
-    gives->givingTo.remove(gets->getPosition());
-    gets->gettingFrom.remove(gives->getPosition());
+    dependant->dependsFrom.remove(dependancy->getPosition());
+    dependancy->dependantTo.remove(dependant->getPosition());
 }
 
 
-void Cell::changedReference(Cell* reciever, const Cell& sender, const ChangeContentArgs& args) {
-    reciever->setCellDisplayAndType(sender.getDisplayContent(), sender.getCellType());
+void Cell::changedReference(Cell* reciever, const Cell* sender, const ChangeContentArgs* args) {
+    reciever->setCellDisplayAndType(sender->getDisplayContent(), sender->getCellType());
 }
 
 void Cell::removeOldEdges() {
-    for (size_t i = 0; i < this->gettingFrom.getLength(); i++) {
-        Cell::removeEdge(this, table->getAtPosition(this->gettingFrom[i]));
+    for (size_t i = 0; i < this->dependsFrom.getLength(); i++) {
+        Cell::removeEdge(this, table->getAtPosition(this->dependsFrom[i]));
     }
+ 
+    this->dependsFrom.clear();
+    this->activeFunction = nullptr;
 }
 

@@ -15,7 +15,8 @@ public:
 
 	void add(const T& item);
 	void remove(const T& item);
-	int indexOf(const T& item);
+	int indexOf(const T& item) const;
+	bool contains(const T& item) const;
 	void removeAt(size_t index);
 	void clear();
 
@@ -123,7 +124,7 @@ inline void List<T>::remove(const T& item) {
 }
 
 template<typename T>
-inline int List<T>::indexOf(const T& item) {
+inline int List<T>::indexOf(const T& item) const {
 	for (size_t i = 0; i < length; i++) {
 		if (this->content[i] == item) {
 			return i;
@@ -131,6 +132,17 @@ inline int List<T>::indexOf(const T& item) {
 	}
 
 	return -1;
+}
+
+template<typename T>
+inline bool List<T>::contains(const T& item) const {
+	for (size_t i = 0; i < length; i++) {
+		if (this->content[i] == item) {
+			return true;
+		}
+	}
+
+	return false;
 }
 
 template<typename T>

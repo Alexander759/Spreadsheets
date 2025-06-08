@@ -11,6 +11,8 @@ class Cell {
 public:
 	Cell();
 
+	void setTable(Table* table);
+
 	const Position& getPosition() const;
 	void setPosition(const Position& position);
 
@@ -37,16 +39,18 @@ private:
 	static void addEdge(Cell* reference, Cell* referenced);
 	static void removeEdge(Cell* reference, Cell* referenced);
 
-	static void changedReference(Cell* reciever, const Cell& sender, const ChangeContentArgs& args);
+	bool hasPathTo(const Position& position);
+	bool hasPathTo(const Position& position, List<Position>& visited);
+	void onChangeContent(const ChangeContentArgs& args);
+	static void changedReference(Cell* reciever, const Cell* sender, const ChangeContentArgs* args);
 	void removeOldEdges();
 
+	CellType type;
+	void (*activeFunction)(Cell* receiver, const Cell* sender, const ChangeContentArgs* args);
 	Table* table;
 	Position position;
 	MyString rawContent;
 	MyString displayContent;
-	CellType type;
-	List<Position> gettingFrom;
-	List<Position> givingTo;
-
-	void (*activeFunction)(Cell* receiver, const Cell& sender, const ChangeContentArgs& args);
+	List<Position> dependsFrom;
+	List<Position> dependantTo;
 };
