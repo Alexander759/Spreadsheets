@@ -17,6 +17,6 @@ CellType ChangeContentArgs::getPreviousCellType() const {
     return this->previousCellType;
 }
 
-CellType ChangeContentArgs::setPreviousCellType(CellType previousCellType) {
+void ChangeContentArgs::setPreviousCellType(CellType previousCellType) {
     this->previousCellType = previousCellType;
 }

@@ -1,9 +1,10 @@
 #pragma once
+#include "MyString.h"
 
 class Position {
 public:
-	Position(size_t row = 0, size_t col = 0);
-
+	Position(size_t row = 1, size_t col = 1);
+	Position(const MyString& str);
 	void setCol(size_t col);
 	size_t getCol() const;
 	
@@ -12,6 +13,11 @@ public:
 
 	bool operator==(const Position& other);
 	bool operator!=(const Position& other);
+
+	MyString toString();
+	
+	static Position fromString(const MyString& str);
+	static bool isPosition(const MyString& str);
 
 private:
 	size_t col;

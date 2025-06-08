@@ -4,6 +4,7 @@
 class MyString {
 public:
 	MyString();
+	MyString(char symbol);
 	MyString(size_t num);
 	MyString(const char* content);
 	MyString(const MyString& other);
@@ -21,7 +22,7 @@ public:
 	void reverse();
 
 	int indexOf(char symbol) const;
-	MyString subStr(size_t start, size_t end);
+	MyString subStr(size_t start, size_t end) const;
 	List<MyString> split(char separator = ' ');
 
 	MyString toLower() const;

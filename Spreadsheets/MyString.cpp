@@ -9,6 +9,13 @@ MyString::MyString() {
 	this->content[0] = '\0';
 }
 
+MyString::MyString(char symbol) {
+	this->length = 1;
+	this->content = new char[this->length + 1];
+	this->content[0] = symbol;
+	this->content[1] = '\0';
+}
+
 MyString::MyString(size_t num) {
 	size_t numCopy = num;
 
@@ -122,7 +129,7 @@ int MyString::indexOf(char symbol) const {
 	return -1;
 }
 
-MyString MyString::subStr(size_t start, size_t end) {
+MyString MyString::subStr(size_t start, size_t end) const {
 	if (end >= this->length || start >= this->length) {
 		throw std::out_of_range("Index bigger than length");
 	}

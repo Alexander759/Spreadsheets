@@ -1,10 +1,9 @@
 #include <iostream>
 #include "TableConfigure.h"
+#include "Position.h"
 
 int main()
 {
-    TableConfigure config("config.txt");
-    std::cout << config.hasError() << std::endl;
-    std::cout << config.getErrorMessage() << std::endl;
-    int a = 5;
+	Position p = Position::fromString("AA3");
+	std::cout << p.getRow() << " " << p.getCol() << std::endl;;
 }

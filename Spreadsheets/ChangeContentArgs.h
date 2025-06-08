@@ -11,7 +11,7 @@ public:
 	void setPreviousContent(MyString previousContent);
 
 	CellType getPreviousCellType() const;
-	CellType setPreviousCellType(CellType previousCellType);
+	void setPreviousCellType(CellType previousCellType);
 
 private:
 	MyString previousContent;
