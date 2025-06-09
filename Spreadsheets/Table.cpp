@@ -5,11 +5,14 @@ Table::Table(const TableConfigure& config) {
 	this->autoFit = config.getAutoFit();
 	this->clearConsoleAfterCommand = config.getClearConsoleAfterCommand();
 	this->alignment = config.getAlignment();
-	this->initialTableRows = config.getInitialTableRows();
-	this->initialTableCols = config.getInitialTableRows();
-	this->maxTableRows = config.getMaxTableRows();
-	this->maxTableCols = config.getMaxTableCols();
+	this->initialTableRows = config.getInitialTableRows() +	1;
+	this->initialTableCols = config.getInitialTableRows() + 1;
+	this->maxTableRows = config.getMaxTableRows() + 1;
+	this->maxTableCols = config.getMaxTableCols() + 1;
 	this->visibleCellSymbols = config.getVisibleCellSymbols();
+
+	this->currentTableRows = this->initialTableRows;
+	this->currentTableCols = this->initialTableCols;
 
 	this->cells = new Cell*[this->maxTableRows];
 
@@ -20,6 +23,16 @@ Table::Table(const TableConfigure& config) {
 			this->cells[i][j].setPosition(Position(i, j));
 			this->cells[i][j].setTable(this);
 		}
+	}
+
+	for (size_t i = 1; i < this->maxTableCols; i++) {
+		MyString stringPosition = Position(1, i).toString();
+		stringPosition = stringPosition.subStr(0, stringPosition.indexOf('1') - 1);
+		this->cells[0][i].setCellDisplayAndType(stringPosition, CellType::String);
+	}
+
+	for (size_t i = 1; i < this->maxTableRows; i++) {
+		this->cells[i][0].setCellDisplayAndType(i, CellType::Number);
 	}
 }
 
@@ -89,29 +102,105 @@ const Cell* Table::getAtPosition(const Position& position) const {
 	return &this->cells[position.getRow()][position.getCol()];
 }
 
-void Table::draw() const {
+void Table::print() const {
 
-	std::cout << "|";
-	for (size_t i = 0; i < this->initialTableRows; i++) {
-		for (size_t i = 0; i < this->initialTableCols; i++) {
-			std::cout << '---';
+	List<size_t> maxSymbols = this->maxNumberOfCharactersPerColumn();
+
+	for (size_t i = 0; i < this->currentTableRows; i++) {
+		
+		printRowBorder(maxSymbols);
+		printRow(maxSymbols, i);
+	}
+	
+	printRowBorder(maxSymbols);
+}
+
+void Table::printRowBorder(const List<size_t>& maxSymbols) const {
+	for (size_t j = 0; j < this->currentTableCols; j++) {
+		std::cout << "|";
+
+		for (size_t k = 0; k < maxSymbols[j]; k++) {
+			std::cout << "-";
 		}
 	}
 	std::cout << "|" << std::endl;
+}
 
+void Table::printRow(const List<size_t>& maxSymbols, int i) const {
+	for (size_t j = 0; j < this->currentTableCols; j++) {
+		std::cout << "|";
 
-	for (size_t i = 0; i < this->initialTableRows; i++) {
-		for (size_t i = 0; i < this->initialTableCols; i++) {
-			std::cout << '---';
+		const Cell* cellPtr = this->getAtPosition(Position(i, j));
+		size_t currentLength = this->getAtPosition(Position(i, j))->getDisplayContent().getLength();
+
+		if (maxSymbols[j] < currentLength) {
+			std::cout << cellPtr->getDisplayContent().subStr(0, maxSymbols[j] - 1);
+			continue;
+		}
+
+		size_t emptySpacesLength = maxSymbols[j] - currentLength;
+
+		if (this->alignment == Alignment::Left) {
+			std::cout << cellPtr->getDisplayContent();
+
+			for (size_t i = 0; i < emptySpacesLength; i++) {
+				std::cout << " ";
+			}
+		}
+		else if (this->alignment == Alignment::Center) {
+			for (size_t i = 0; i < emptySpacesLength / 2; i++) {
+				std::cout << " ";
+			}
+
+			if (emptySpacesLength % 2 == 1) {
+				std::cout << " ";
+			}
+
+			std::cout << cellPtr->getDisplayContent();
+
+			for (size_t i = 0; i < emptySpacesLength / 2; i++) {
+				std::cout << " ";
+			}
+		}
+		else {
+			for (size_t i = 0; i < emptySpacesLength; i++) {
+				std::cout << " ";
+			}
+
+			std::cout << cellPtr->getDisplayContent();
+		}
+	}
+	std::cout << "|" << std::endl;
+}
+
+List<size_t> Table::maxNumberOfCharactersPerColumn() const {
+	List<size_t> result;
+
+	for (size_t i = 0; i < this->currentTableCols; i++) {
+		result.add(3);
+		for (size_t j = 0; j < this->currentTableRows; j++) {
+			size_t currentLength = this->getAtPosition(Position(j, i))->getDisplayContent().getLength();
+			if (this->autoFit) {
+
+				if (result[i] < currentLength) {
+					result[i] = currentLength;
+				}
+			}
+			else {
+
+				if (this->visibleCellSymbols <= currentLength) {
+					result[i] = this->visibleCellSymbols;
+					continue;
+				}
+
+				if (result[i] < currentLength) {
+					result[i] = currentLength;
+				}
+			}
 		}
 	}
 
-
-	for (size_t i = 0; i < this->initialTableRows; i++) {
-		for (size_t j = 0; j < this->initialTableCols; j++) {
-
-		}
-	}
+	return result;
 
 }
 

@@ -49,7 +49,7 @@ MyString Position::toString() {
 		char letter = 'A' + (colCopy % LETTERSINALPHABET);
 		result += MyString(letter);
 		colCopy = colCopy / LETTERSINALPHABET;
-	}
+	};
 
 	result.reverse();
 

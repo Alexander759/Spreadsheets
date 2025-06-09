@@ -112,8 +112,9 @@ void Cell::handleReferenceContent(Cell& cell) {
     }
 
     Cell::addEdge(&cell, referencedCell);
-
     cell.activeFunction = changedReference;
+
+    cell.setCellDisplayAndType(referencedCell->getDisplayContent(), referencedCell->getCellType());
 }
 
 void Cell::handleFormulaContent(Cell& cell) {

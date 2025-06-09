@@ -15,7 +15,10 @@ public:
 	Cell* getAtPosition(const Position& position);
 	const Cell* getAtPosition(const Position& position) const;
 
-	void draw() const;
+	void print() const;
+	void printRowBorder(const List<size_t>& maxSymbols) const;
+	void printRow(const List<size_t>& maxSymbols, int i) const;
+	List<size_t> maxNumberOfCharactersPerColumn() const;
 private:
 
 	void copyFrom(const Table& other);
@@ -27,6 +30,8 @@ private:
 	Alignment alignment;
 	size_t initialTableRows;
 	size_t initialTableCols;
+	size_t currentTableRows;
+	size_t currentTableCols;
 	size_t maxTableRows;
 	size_t maxTableCols;
 	size_t visibleCellSymbols;
