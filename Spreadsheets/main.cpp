@@ -13,12 +13,7 @@ int main()
 	t.getAtPosition(Position(3, 1))->setCellDisplayAndType("test test test test", CellType::String);
 	t.getAtPosition(Position(3, 2))->setCellDisplayAndType("Finaly working", CellType::String);
 	t.getAtPosition(Position(4, 1))->setRawContent("=A3");
+	t.getAtPosition(Position(4, 1))->setRawContent("false");
 	
-	t.print();
-
-
-	t.getAtPosition(Position(3, 1))->setCellDisplayAndType("ABC", CellType::String);
-
-
 	t.print();
 }

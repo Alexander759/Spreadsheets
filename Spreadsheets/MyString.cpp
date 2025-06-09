@@ -151,7 +151,7 @@ MyString MyString::subStr(size_t start, size_t end) const {
 	return result;
 }
 
-List<MyString> MyString::split(char separator) {
+List<MyString> MyString::split(char separator) const {
 	List<MyString> result;
 
 	size_t start = 0;

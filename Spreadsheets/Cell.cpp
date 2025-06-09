@@ -1,6 +1,9 @@
 #include "Cell.h"
 #include "Table.h"
+#include "Parser.h"
 #include <stdexcept>
+
+MyString Cell::errorStateMessage = "#VALUE!";
 
 Cell::Cell() {
     this->type = CellType::EmptyCell;
@@ -54,27 +57,35 @@ List<Position>& Cell::getDependents() {
 }
 
 void Cell::parseRawContent(Cell& cell) {
-    if (cell.rawContent.isBool()) {
+
+    CellType cellType = Parser::getCellTypeFromInput(cell.rawContent);
+
+    if (cellType == CellType::Bool) {
         handleBoolContent(cell);
         return;
     }
 
-    if (cell.rawContent.isDouble()) {
+    if (cellType == CellType::Number) {
         handleDoubleContent(cell);
         return;
     }
 
-    if (cell.rawContent[0] == '=' && cell.rawContent.indexOf('(') != -1) {
+    if (cellType == CellType::Expression) {
         handleFormulaContent(cell);
         return;
     }
 
-    if (cell.rawContent[0] == '=') {
+    if (cellType == CellType::Reference) {
         handleReferenceContent(cell);
         return;
     }
     
-    handleStringContent(cell);
+    if (cellType == CellType::String) {
+        handleStringContent(cell);
+        return;
+    }
+
+    cell.setCellDisplayAndType(Cell::errorStateMessage, CellType::Error);
 }
 
 void Cell::handleBoolContent(Cell& cell) {
@@ -96,7 +107,8 @@ void Cell::handleReferenceContent(Cell& cell) {
     MyString positionInString = cell.rawContent.subStr(cell.rawContent.indexOf('=') + 1, cell.rawContent.getLength() - 1);
 
     if (!Position::isPosition(positionInString)) {
-        throw std::invalid_argument("Not position");
+        cell.setCellDisplayAndType(Cell::errorStateMessage, CellType::Error);
+        return;
     }
 
     Position positionOfReferencedCell = Position::fromString(positionInString);
@@ -104,11 +116,13 @@ void Cell::handleReferenceContent(Cell& cell) {
     Cell* referencedCell = cell.table->getAtPosition(positionOfReferencedCell);
 
     if (referencedCell == nullptr) {
-        throw std::invalid_argument("Invalid Position");
+        cell.setCellDisplayAndType(Cell::errorStateMessage, CellType::Error);
+        return;
     }
 
     if (referencedCell->hasPathTo(cell.getPosition())) {
-        throw std::exception("Circular dependancy");
+        cell.setCellDisplayAndType(Cell::errorStateMessage, CellType::Error);
+        return;
     }
 
     Cell::addEdge(&cell, referencedCell);
@@ -118,6 +132,9 @@ void Cell::handleReferenceContent(Cell& cell) {
 }
 
 void Cell::handleFormulaContent(Cell& cell) {
+    MyString functionName = Parser::getExpressionName(cell.rawContent);
+    List<MyString> arguments = Parser::getArgumentsFromExpression(cell.rawContent);
+
 }
 
 bool Cell::hasPathTo(const Position& position) {

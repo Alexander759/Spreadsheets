@@ -39,6 +39,8 @@ private:
 	static void addEdge(Cell* reference, Cell* referenced);
 	static void removeEdge(Cell* reference, Cell* referenced);
 
+	static MyString errorStateMessage;
+
 	bool hasPathTo(const Position& position);
 	bool hasPathTo(const Position& position, List<Position>& visited);
 	void onChangeContent(const ChangeContentArgs& args);

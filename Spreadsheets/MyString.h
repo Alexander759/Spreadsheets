@@ -23,7 +23,7 @@ public:
 
 	int indexOf(char symbol) const;
 	MyString subStr(size_t start, size_t end) const;
-	List<MyString> split(char separator = ' ');
+	List<MyString> split(char separator = ' ') const;
 
 	MyString toLower() const;
 	MyString toUpper() const;
