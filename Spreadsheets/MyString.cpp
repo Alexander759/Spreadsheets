@@ -36,6 +36,79 @@ MyString::MyString(size_t num) {
 	this->reverse();
 }
 
+MyString::MyString(int num) {
+	this->length = 0;
+	this->content = new char[1];
+	this->content[0] = '\0';
+	bool isNegative = false;
+
+	if (num < 0) {
+		isNegative = true;
+		num *= -1;
+	}
+	size_t positiveNum = num;
+	*this = MyString(positiveNum);
+
+	if (isNegative) {
+		*this = MyString("-") + *this;
+	}
+}
+
+
+MyString::MyString(double num) {
+	this->length = 0;
+	this->content = new char[1];
+	this->content[0] = '\0';
+
+	bool isNegative = false;
+	if (num < 0) {
+		num *= -1;
+		isNegative = true;
+	}
+
+	int integerPart = num;
+	num -= integerPart;
+	*this += MyString(integerPart);
+
+	const int PRECISION = 10;
+
+	int leadingZeroes = 0;
+	double numCopy = num;
+	while (numCopy < 0.1 && leadingZeroes < PRECISION) {
+		numCopy *= 10;
+		leadingZeroes++;
+	}
+
+	if (leadingZeroes < PRECISION) {
+		*this += ".";
+		for (size_t i = 0; i < leadingZeroes; i++) {
+			*this += "0";
+		}
+
+		numCopy = num;
+		for (size_t i = 0; i < PRECISION; i++) {
+			numCopy *= 10;
+		}
+
+		size_t copyFirstSixDigits = numCopy;
+		MyString afterDecimal(copyFirstSixDigits);
+		size_t lastZeroIndex = afterDecimal.getLength();
+		for (int i = afterDecimal.getLength() - 1; i >= 0; i--) {
+			if (afterDecimal.content[i] != '0') {
+				lastZeroIndex = i + 1;
+				break;
+			}
+		}
+
+		afterDecimal = afterDecimal.subStr(0, lastZeroIndex);
+		*this += afterDecimal;
+	}
+
+	if (isNegative) {
+		*this = MyString("-") + *this;
+	}
+}
+
 MyString::MyString(const char* content) {
 	this->length = strlen(content);
 	this->content = new char[this->length + 1];

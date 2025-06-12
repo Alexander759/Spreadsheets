@@ -6,6 +6,8 @@ public:
 	MyString();
 	MyString(char symbol);
 	MyString(size_t num);
+	MyString(int num);
+	MyString(double num);
 	MyString(const char* content);
 	MyString(const MyString& other);
 	MyString(MyString&& other);

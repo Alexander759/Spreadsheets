@@ -129,6 +129,8 @@
   <ItemGroup>
     <ClCompile Include="Cell.cpp" />
     <ClCompile Include="ChangeContentArgs.cpp" />
+    <ClCompile Include="Formula.cpp" />
+    <ClCompile Include="FormulasHolder.cpp" />
     <ClCompile Include="Parser.cpp" />
     <ClCompile Include="Position.cpp" />
     <ClCompile Include="PropertyBase.cpp" />
@@ -147,7 +149,8 @@
     <ClInclude Include="CellType.h" />
     <ClInclude Include="ChangeContentArgs.h" />
     <ClInclude Include="Event.hpp" />
-    <ClInclude Include="Formula.hpp" />
+    <ClInclude Include="Formula.h" />
+    <ClInclude Include="FormulasHolder.h" />
     <ClInclude Include="Parser.h" />
     <ClInclude Include="Position.h" />
     <ClInclude Include="Property.hpp" />

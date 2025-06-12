@@ -12,6 +12,8 @@ public:
 	Table& operator=(Table&& other);
 	~Table();
 
+	friend class FormulasHolder;
+
 	Cell* getAtPosition(const Position& position);
 	const Cell* getAtPosition(const Position& position) const;
 

@@ -2,6 +2,7 @@
 #include "CellType.h"
 #include "MyString.h"
 #include "ArgumentType.h"
+#include "Position.h"
 
 class Parser {
 public:
@@ -10,7 +11,5 @@ public:
 
 	static MyString getExpressionName(const MyString& str);
 	static List<MyString> getArgumentsFromExpression(const MyString& str);
-
-private:
-
+	static List<Position> getPositionsInRange(const MyString& str);
 };

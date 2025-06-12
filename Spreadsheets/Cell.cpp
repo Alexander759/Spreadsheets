@@ -1,6 +1,8 @@
 #include "Cell.h"
 #include "Table.h"
 #include "Parser.h"
+#include "MyString.h"
+#include "FormulasHolder.h"
 #include <stdexcept>
 
 MyString Cell::errorStateMessage = "#VALUE!";
@@ -135,6 +137,22 @@ void Cell::handleFormulaContent(Cell& cell) {
     MyString functionName = Parser::getExpressionName(cell.rawContent);
     List<MyString> arguments = Parser::getArgumentsFromExpression(cell.rawContent);
 
+    bool functionIsFound = false;
+    for (size_t i = 0; i < FormulasHolder::getFormulas().getLength(); i++) {
+        const Formula& formula = FormulasHolder::getFormulas()[i];
+
+        if (formula.getName().toUpper() == functionName.toUpper()) {
+            functionIsFound = true;
+            formula.getOnRun()(&cell, arguments);
+            cell.activeFunction = formula.getOnChange();
+        }
+
+    }
+
+    if (!functionIsFound) {
+        cell.setCellDisplayAndType(Cell::errorStateMessage, CellType::Error);
+        return;
+    }
 }
 
 bool Cell::hasPathTo(const Position& position) {
@@ -204,8 +222,13 @@ void Cell::addEdge(Cell* dependant, Cell* dependancy) {
         return;
     }
 
-    dependant->dependsFrom.add(dependancy->getPosition());
-    dependancy->dependantTo.add(dependant->getPosition());
+    if (!dependant->dependsFrom.contains(dependancy->getPosition())) {
+        dependant->dependsFrom.add(dependancy->getPosition());
+    }
+
+    if (!dependancy->dependantTo.contains(dependant->getPosition())) {
+        dependancy->dependantTo.add(dependant->getPosition());
+    }
 }
 
 void Cell::removeEdge(Cell* dependant, Cell* dependancy) {

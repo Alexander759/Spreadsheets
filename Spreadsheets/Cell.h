@@ -11,6 +11,8 @@ class Cell {
 public:
 	Cell();
 
+	friend class FormulasHolder;
+
 	void setTable(Table* table);
 
 	const Position& getPosition() const;
