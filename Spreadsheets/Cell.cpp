@@ -33,6 +33,7 @@ const MyString& Cell::getRawContent() const {
 }
 
 void Cell::setRawContent(const MyString& rawContent) {
+    this->table->setCurrentRowsAndCols(this->position);
     this->rawContent = rawContent;
     parseRawContent(*this);
 }

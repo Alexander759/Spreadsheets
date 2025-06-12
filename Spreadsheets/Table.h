@@ -22,6 +22,8 @@ public:
 	void printRowBorder(const List<size_t>& maxSymbols) const;
 	void printRow(const List<size_t>& maxSymbols, int i) const;
 	List<size_t> maxNumberOfCharactersPerColumn() const;
+
+	void setCurrentRowsAndCols(const Position& pos);
 private:
 
 	void copyFrom(const Table& other);

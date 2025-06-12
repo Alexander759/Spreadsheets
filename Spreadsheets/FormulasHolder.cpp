@@ -23,7 +23,7 @@ void FormulasHolder::setFormulas() {
 	FormulasHolder::formulas.add(Formula("MAX", onRunMax, onChangeMax));
 	FormulasHolder::formulas.add(Formula("LEN", onRunLen, onChangeLen));
 	FormulasHolder::formulas.add(Formula("CONCAT", onRunConcat, onChangeConcat));
-	FormulasHolder::formulas.add(Formula("SUBSTRING", onRunSubstr, onChangeSubstr));
+	FormulasHolder::formulas.add(Formula("SUBSTR", onRunSubstr, onChangeSubstr));
 	FormulasHolder::formulas.add(Formula("COUNT", onRunCount, onChangeCount));
 }
 

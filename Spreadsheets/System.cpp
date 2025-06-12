@@ -33,6 +33,12 @@ bool System::validateOpenTable(const List<MyString>& args) {
 
 void System::newTable(const List<MyString>& args) {
 	TableConfigure config(args[0]);
+
+	if (config.hasError()) {
+		std::cout << config.getErrorMessage() << std::endl;
+		return;
+	}
+
 	Table table(config);
 
 	MyString command;
@@ -62,7 +68,17 @@ void System::newTable(const List<MyString>& args) {
 
 		args.removeAt(0);
 
+		if (args.getLength() == 0) {
+			std::cout << "Invalid input" << std::endl;
+			continue;
+		}
+
 		if (args[0] == "insert") {
+			if (args.getLength() < 2) {
+				std::cout << "Invalid input" << std::endl;
+				continue;
+			}
+
 			currentCell->setRawContent(args[1]);
 		}
 		else if (args[0] == "delete") {

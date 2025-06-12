@@ -43,18 +43,18 @@ MyString Position::toString() {
 	const size_t LETTERSINALPHABET = 26;
 	MyString result;
 
-	size_t colCopy = this->col;
-	while (colCopy > 0) {
-		colCopy--;
-		char letter = 'A' + (colCopy % LETTERSINALPHABET);
+	size_t rowCopy = this->row;
+	while (rowCopy > 0) {
+		rowCopy--;
+		char letter = 'A' + (rowCopy % LETTERSINALPHABET);
 		result += MyString(letter);
-		colCopy = colCopy / LETTERSINALPHABET;
+		rowCopy = rowCopy / LETTERSINALPHABET;
 	};
 
 	result.reverse();
 
 
-	result += MyString(this->row);
+	result += MyString(this->col);
 
 	return result;
 }
@@ -66,26 +66,26 @@ Position Position::fromString(const MyString& str) {
 		return Position(0, 0);
 	}
 
-	size_t endOfCol = 0;
+	size_t endOfRow = 0;
 	for (size_t i = 0; i < strUpper.getLength(); i++) {
 		if ('1' <= strUpper[i] && strUpper[i] <= '9') {
-			endOfCol = i;
+			endOfRow = i;
 			break;
 		}
 	}
-	endOfCol--;
+	endOfRow--;
 
-	MyString colStr = strUpper.subStr(0, endOfCol);
+	MyString rowStr = strUpper.subStr(0, endOfRow);
 
 	const size_t LETTERSINALPHABET = 26;
-	size_t col = 0;
-	for (size_t i = 0; i < colStr.getLength(); i++) {
-		col *= LETTERSINALPHABET;
-		col += colStr[i] - 'A';
-		col++;
+	size_t row = 0;
+	for (size_t i = 0; i < rowStr.getLength(); i++) {
+		row *= LETTERSINALPHABET;
+		row += rowStr[i] - 'A';
+		row++;
 	}
 
-	size_t row = strUpper.subStr(endOfCol + 1, strUpper.getLength() - 1).toSizeT();
+	size_t col = strUpper.subStr(endOfRow + 1, strUpper.getLength() - 1).toSizeT();
 
 	return Position(row, col);
 }

@@ -5,7 +5,7 @@
 
 class ChangeContentArgs {
 public:
-	ChangeContentArgs(MyString previousContent, CellType previousCellType);
+	ChangeContentArgs(const MyString& previousContent, CellType previousCellType);
 
 	const MyString& getPreviousContent() const;
 	void setPreviousContent(MyString previousContent);

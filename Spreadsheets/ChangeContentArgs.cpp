@@ -1,6 +1,6 @@
 #include "ChangeContentArgs.h"
 
-ChangeContentArgs::ChangeContentArgs(MyString previousContent, CellType previousCellType) {
+ChangeContentArgs::ChangeContentArgs(const MyString& previousContent, CellType previousCellType) {
     this->previousContent = previousContent;
     this->previousCellType = previousCellType;
 }

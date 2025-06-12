@@ -6,7 +6,7 @@ Table::Table(const TableConfigure& config) {
 	this->clearConsoleAfterCommand = config.getClearConsoleAfterCommand();
 	this->alignment = config.getAlignment();
 	this->initialTableRows = config.getInitialTableRows() +	1;
-	this->initialTableCols = config.getInitialTableRows() + 1;
+	this->initialTableCols = config.getInitialTableCols() + 1;
 	this->maxTableRows = config.getMaxTableRows() + 1;
 	this->maxTableCols = config.getMaxTableCols() + 1;
 	this->visibleCellSymbols = config.getVisibleCellSymbols();
@@ -25,14 +25,14 @@ Table::Table(const TableConfigure& config) {
 		}
 	}
 
-	for (size_t i = 1; i < this->maxTableCols; i++) {
-		MyString stringPosition = Position(1, i).toString();
+	for (size_t i = 1; i < this->maxTableRows; i++) {
+		MyString stringPosition = Position(i, 1).toString();
 		stringPosition = stringPosition.subStr(0, stringPosition.indexOf('1') - 1);
-		this->cells[0][i].setCellDisplayAndType(stringPosition, CellType::String);
+		this->cells[i][0].setCellDisplayAndType(stringPosition, CellType::String);
 	}
 
-	for (size_t i = 1; i < this->maxTableRows; i++) {
-		this->cells[i][0].setCellDisplayAndType(i, CellType::Number);
+	for (size_t i = 1; i < this->maxTableCols; i++) {
+		this->cells[0][i].setCellDisplayAndType(i, CellType::Number);
 	}
 }
 
@@ -206,6 +206,20 @@ List<size_t> Table::maxNumberOfCharactersPerColumn() const {
 
 	return result;
 
+}
+
+void Table::setCurrentRowsAndCols(const Position& pos) {
+	if (pos.getRow() > maxTableRows || pos.getCol() > maxTableRows) {
+		return;
+	}
+
+	if (this->currentTableRows < pos.getRow()) {
+		this->currentTableRows = pos.getRow() + 1;
+	}
+
+	if (this->currentTableCols < pos.getCol()) {
+		this->currentTableCols = pos.getCol() + 1;
+	}
 }
 
 

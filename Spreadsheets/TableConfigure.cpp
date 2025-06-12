@@ -38,7 +38,7 @@ TableConfigure::TableConfigure(const MyString& fileName) {
 
             if (prop->getName() == propertiesInString[i][0]) {
                 prop->setErrorFlag(true);
-                prop->setErrorMessage("Invalid value");
+                prop->setErrorMessage(MyString("ABBORTING! ") + prop->getName() + ": - Invalid value");
             }
                 
             continue;
