@@ -102,7 +102,7 @@ void Cell::handleDoubleContent(Cell& cell) {
 
 void Cell::handleStringContent(Cell& cell) {
     cell.removeOldEdges();
-    cell.setCellDisplayAndType(cell.rawContent, CellType::String);
+    cell.setCellDisplayAndType(cell.rawContent.subStr(1, cell.rawContent.getLength() - 2), CellType::String);
 }
 
 void Cell::handleReferenceContent(Cell& cell) {
@@ -136,7 +136,6 @@ void Cell::handleReferenceContent(Cell& cell) {
 void Cell::handleFormulaContent(Cell& cell) {
     MyString functionName = Parser::getExpressionName(cell.rawContent);
     List<MyString> arguments = Parser::getArgumentsFromExpression(cell.rawContent);
-
     bool functionIsFound = false;
     for (size_t i = 0; i < FormulasHolder::getFormulas().getLength(); i++) {
         const Formula& formula = FormulasHolder::getFormulas()[i];

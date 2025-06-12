@@ -129,6 +129,7 @@
   <ItemGroup>
     <ClCompile Include="Cell.cpp" />
     <ClCompile Include="ChangeContentArgs.cpp" />
+    <ClCompile Include="Command.cpp" />
     <ClCompile Include="Formula.cpp" />
     <ClCompile Include="FormulasHolder.cpp" />
     <ClCompile Include="Parser.cpp" />
@@ -138,6 +139,8 @@
     <ClCompile Include="Reader.cpp" />
     <ClCompile Include="MyString.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="System.cpp" />
+    <ClCompile Include="System.h" />
     <ClCompile Include="Table.cpp" />
     <ClCompile Include="Table.h" />
     <ClCompile Include="TableConfigure.cpp" />
@@ -148,6 +151,7 @@
     <ClInclude Include="Cell.h" />
     <ClInclude Include="CellType.h" />
     <ClInclude Include="ChangeContentArgs.h" />
+    <ClInclude Include="Command.h" />
     <ClInclude Include="Event.hpp" />
     <ClInclude Include="Formula.h" />
     <ClInclude Include="FormulasHolder.h" />

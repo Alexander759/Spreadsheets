@@ -38,7 +38,7 @@ private:
 	static void handleReferenceContent(Cell& cell);
 	static void handleFormulaContent(Cell& cell);
 
-	static void addEdge(Cell* reference, Cell* referenced);
+	static void addEdge(Cell* dependant, Cell* dependancy);
 	static void removeEdge(Cell* reference, Cell* referenced);
 
 	static MyString errorStateMessage;

@@ -62,7 +62,7 @@ MyString Parser::getExpressionName(const MyString& str) {
 }
 
 List<MyString> Parser::getArgumentsFromExpression(const MyString& str) {
-    return str.subStr(str.indexOf('(') + 1, str.indexOf(')') - 1).split(',');
+    return str.subStr(str.indexOf('(') + 1, str.indexOf(')') - 1).removeFreeSpaces().split(',');
 }
 
 List<Position> Parser::getPositionsInRange(const MyString& str) {

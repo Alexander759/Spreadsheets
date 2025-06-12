@@ -104,6 +104,10 @@ const Cell* Table::getAtPosition(const Position& position) const {
 
 void Table::print() const {
 
+	if (this->clearConsoleAfterCommand) {
+		system("cls");
+	}
+
 	List<size_t> maxSymbols = this->maxNumberOfCharactersPerColumn();
 
 	for (size_t i = 0; i < this->currentTableRows; i++) {
@@ -226,6 +230,8 @@ void Table::copyStatic(const Table& other) {
 	this->alignment = other.alignment;
 	this->initialTableRows = other.initialTableRows;
 	this->initialTableCols = other.initialTableCols;
+	this->currentTableRows = other.currentTableRows;
+	this->currentTableCols = other.currentTableCols;
 	this->maxTableRows = other.maxTableRows;
 	this->maxTableCols = other.maxTableCols;
 	this->visibleCellSymbols = other.visibleCellSymbols;

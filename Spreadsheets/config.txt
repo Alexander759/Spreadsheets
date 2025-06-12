@@ -5,4 +5,4 @@ maxTableCols:10
 autoFit:true
 visibleCellSymbols:10
 initialAlignment:center
-clearConsoleAfterCommand:false
+clearConsoleAfterCommand:true

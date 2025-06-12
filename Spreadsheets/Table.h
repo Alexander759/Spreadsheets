@@ -5,6 +5,7 @@
 
 class Table {
 public:
+	Table() = default;
 	Table(const TableConfigure& config);
 	Table(const Table& other);
 	Table(Table&& other);

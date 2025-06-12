@@ -228,13 +228,27 @@ List<MyString> MyString::split(char separator) const {
 	List<MyString> result;
 
 	size_t start = 0;
-	
+	bool insideQuatations = false;
+	size_t parentheses = 0;
+
 	for (size_t i = 0; i < length; i++) {
-		if (this->content[i] == separator) {
+		if (this->content[i] == separator && !insideQuatations && parentheses == 0) {
 			if (i > start) {
 				result.add(this->subStr(start, i - 1));
 			}
 			start = i + 1;
+		}
+
+		if (this->content[i] == '"' && parentheses == 0) {
+			insideQuatations = !insideQuatations;
+		}
+
+		if (this->content[i] == '(' && !insideQuatations) {
+			parentheses++;
+		}
+
+		if (this->content[i] == ')' && parentheses > 0 && !insideQuatations) {
+			parentheses--;
 		}
 	}
 
@@ -464,6 +478,24 @@ MyString MyString::operator+(const MyString& other) const {
 MyString& MyString::operator+=(const MyString& other) {
 	this->concat(other);
 	return *this;
+}
+
+MyString MyString::removeFreeSpaces() const {
+	MyString result;
+	bool isInQuotations = false;
+	for (size_t i = 0; i < length; i++) {
+		if (this->content[i] == ' ' && !isInQuotations) {
+			continue;
+		}
+
+		if (this->content[i] == '"') {
+			isInQuotations = !isInQuotations;
+		}
+
+		result += this->content[i];
+	}
+
+	return result;
 }
 
 char MyString::operator[](size_t index) const {

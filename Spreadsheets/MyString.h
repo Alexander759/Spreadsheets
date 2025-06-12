@@ -51,6 +51,8 @@ public:
 	MyString operator+(const MyString& other) const;
 	MyString& operator+=(const MyString& other);
 
+	MyString removeFreeSpaces() const;
+
 	char operator[](size_t index) const;
 	char& operator[](size_t index);
 
