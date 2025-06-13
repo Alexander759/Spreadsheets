@@ -63,6 +63,11 @@ void Cell::parseRawContent(Cell& cell) {
 
     CellType cellType = Parser::getCellTypeFromInput(cell.rawContent);
 
+    if (cellType == CellType::EmptyCell) {
+        handleNoContent(cell);
+        return;
+    }
+
     if (cellType == CellType::Bool) {
         handleBoolContent(cell);
         return;
@@ -89,6 +94,10 @@ void Cell::parseRawContent(Cell& cell) {
     }
 
     cell.setCellDisplayAndType(Cell::errorStateMessage, CellType::Error);
+}
+
+void Cell::handleNoContent(Cell& cell) {
+    cell.setCellDisplayAndType("", CellType::EmptyCell);
 }
 
 void Cell::handleBoolContent(Cell& cell) {
@@ -254,3 +263,23 @@ void Cell::removeOldEdges() {
     this->activeFunction = nullptr;
 }
 
+std::ofstream& operator<<(std::ofstream& stream, const Cell& cell) {
+    if (!stream.good()) {
+        return stream;
+    }
+
+    stream << cell.rawContent;
+    return stream;
+}
+
+std::ifstream& operator>>(std::ifstream& stream, Cell& cell) {
+    if (!stream.good()) {
+        return stream;
+    }
+
+    MyString str;
+    stream >> str;
+    cell.setRawContent(str);
+
+    return stream;
+}

@@ -2,6 +2,7 @@
 #include <iostream>
 #include <stdexcept>
 #include <cstring>
+#include <fstream>
 
 MyString::MyString() {
 	this->length = 0;
@@ -526,16 +527,42 @@ void MyString::free() {
 	this->length = 0;
 }
 
-std::istream& operator>>(std::istream& stream, MyString& string) {
-	const int MAXINPUTSIZE = 1024;
-	char input[MAXINPUTSIZE];
-	stream.getline(input, MAXINPUTSIZE);
-	string.setCString(input);
+std::ofstream& operator<<(std::ofstream& stream, const MyString& str) {
+	if (!stream.good()) {
+		return stream;
+	}
+
+	stream.write(reinterpret_cast<const char*>(&str.length), sizeof(size_t));
+	stream.write(reinterpret_cast<const char*>(str.content), str.length + 1);
 
 	return stream;
 }
 
-std::ostream& operator<<(std::ostream& stream, const MyString& other) {
-	stream << other.getCString();
+std::ifstream& operator>>(std::ifstream& stream, MyString& str) {
+	if (!stream.good()) {
+		return stream;
+	}
+
+	str.free();
+
+	stream.read(reinterpret_cast<char*>(&str.length), sizeof(size_t));
+
+	str.content = new char[str.length + 1];
+	stream.read(reinterpret_cast<char*>(str.content), str.length + 1);
+
+	return stream;
+}
+
+std::istream& operator>>(std::istream& stream, MyString& str) {
+	const int MAXINPUTSIZE = 1024;
+	char input[MAXINPUTSIZE];
+	stream.getline(input, MAXINPUTSIZE);
+	str.setCString(input);
+
+	return stream;
+}
+
+std::ostream& operator<<(std::ostream& stream, const MyString& str) {
+	stream << str.getCString();
 	return stream;
 }

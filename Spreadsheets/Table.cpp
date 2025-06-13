@@ -11,9 +11,6 @@ Table::Table(const TableConfigure& config) {
 	this->maxTableCols = config.getMaxTableCols() + 1;
 	this->visibleCellSymbols = config.getVisibleCellSymbols();
 
-	this->currentTableRows = this->initialTableRows;
-	this->currentTableCols = this->initialTableCols;
-
 	this->cells = new Cell*[this->maxTableRows];
 
 	for (size_t i = 0; i < this->maxTableRows; i++) {
@@ -28,12 +25,15 @@ Table::Table(const TableConfigure& config) {
 	for (size_t i = 1; i < this->maxTableRows; i++) {
 		MyString stringPosition = Position(i, 1).toString();
 		stringPosition = stringPosition.subStr(0, stringPosition.indexOf('1') - 1);
-		this->cells[i][0].setCellDisplayAndType(stringPosition, CellType::String);
+		this->cells[i][0].setRawContent(MyString("\"") + stringPosition + "\"");
 	}
 
 	for (size_t i = 1; i < this->maxTableCols; i++) {
-		this->cells[0][i].setCellDisplayAndType(i, CellType::Number);
+		this->cells[0][i].setRawContent(i);
 	}
+
+	this->currentTableRows = this->initialTableRows;
+	this->currentTableCols = this->initialTableCols;
 }
 
 Table::Table(const Table& other) {
@@ -84,6 +84,20 @@ Table& Table::operator=(Table&& other) {
 
 Table::~Table() {
 	free();
+}
+
+void Table::setNewConfigure(const TableConfigure& config) {
+	this->autoFit = config.getAutoFit();
+	this->clearConsoleAfterCommand = config.getClearConsoleAfterCommand();
+	this->alignment = config.getAlignment();
+	this->initialTableRows = config.getInitialTableRows() + 1;
+	this->initialTableCols = config.getInitialTableCols() + 1;
+	this->maxTableRows = config.getMaxTableRows() + 1;
+	this->maxTableCols = config.getMaxTableCols() + 1;
+	this->visibleCellSymbols = config.getVisibleCellSymbols();
+
+	this->currentTableRows = this->initialTableRows;
+	this->currentTableCols = this->initialTableCols;
 }
 
 Cell* Table::getAtPosition(const Position& position) {
@@ -213,11 +227,11 @@ void Table::setCurrentRowsAndCols(const Position& pos) {
 		return;
 	}
 
-	if (this->currentTableRows < pos.getRow()) {
+	if (this->currentTableRows < pos.getRow() + 1) {
 		this->currentTableRows = pos.getRow() + 1;
 	}
 
-	if (this->currentTableCols < pos.getCol()) {
+	if (this->currentTableCols < pos.getCol() + 1) {
 		this->currentTableCols = pos.getCol() + 1;
 	}
 }
@@ -265,4 +279,63 @@ void Table::free() {
 	this->cells = nullptr;
 	this->maxTableCols = 0;
 	this->maxTableRows = 0;
+}
+
+std::ofstream& operator<<(std::ofstream& stream, const Table& table) {
+	if (!stream.good()) {
+		return stream;
+	}
+
+	stream.write(reinterpret_cast<const char*>(&table.autoFit), sizeof(bool));
+	stream.write(reinterpret_cast<const char*>(&table.clearConsoleAfterCommand), sizeof(bool));
+	stream.write(reinterpret_cast<const char*>(&table.initialTableRows), sizeof(size_t));
+	stream.write(reinterpret_cast<const char*>(&table.initialTableCols), sizeof(size_t));
+	stream.write(reinterpret_cast<const char*>(&table.currentTableRows), sizeof(size_t));
+	stream.write(reinterpret_cast<const char*>(&table.currentTableCols), sizeof(size_t));
+	stream.write(reinterpret_cast<const char*>(&table.maxTableRows), sizeof(size_t));
+	stream.write(reinterpret_cast<const char*>(&table.maxTableCols), sizeof(size_t));
+	stream.write(reinterpret_cast<const char*>(&table.visibleCellSymbols), sizeof(size_t));
+	stream.write(reinterpret_cast<const char*>(&table.alignment), sizeof(Alignment));
+
+	for (size_t i = 0; i < table.maxTableRows; i++) {
+		for (size_t j = 0; j < table.maxTableCols; j++) {
+			stream << table.cells[i][j];
+		}
+	}
+
+	return stream;
+}
+
+std::ifstream& operator>>(std::ifstream& stream, Table& table) {
+	if (!stream.good()) {
+		return stream;
+	}
+
+	table.free();
+
+	stream.read(reinterpret_cast<char*>(&table.autoFit), sizeof(bool));
+	stream.read(reinterpret_cast<char*>(&table.clearConsoleAfterCommand), sizeof(bool));
+	stream.read(reinterpret_cast<char*>(&table.initialTableRows), sizeof(size_t));
+	stream.read(reinterpret_cast<char*>(&table.initialTableCols), sizeof(size_t));
+	stream.read(reinterpret_cast<char*>(&table.currentTableRows), sizeof(size_t));
+	stream.read(reinterpret_cast<char*>(&table.currentTableCols), sizeof(size_t));
+	stream.read(reinterpret_cast<char*>(&table.maxTableRows), sizeof(size_t));
+	stream.read(reinterpret_cast<char*>(&table.maxTableCols), sizeof(size_t));
+	stream.read(reinterpret_cast<char*>(&table.visibleCellSymbols), sizeof(size_t));
+	stream.read(reinterpret_cast<char*>(&table.alignment), sizeof(Alignment));
+
+	table.cells = new Cell*[table.maxTableRows];
+	for (size_t i = 0; i < table.maxTableRows; i++) {
+		table.cells[i] = new Cell[table.maxTableCols];
+	}
+
+	for (size_t i = 0; i < table.maxTableRows; i++) {
+		for (size_t j = 0; j < table.maxTableCols; j++) {
+			table.cells[i][j].setPosition(Position(i, j));
+			table.cells[i][j].setTable(&table);
+			stream >> table.cells[i][j];
+		}
+	}
+
+	return stream;
 }

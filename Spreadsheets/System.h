@@ -10,6 +10,8 @@ public:
 
 	static bool validateOpenTable(const List<MyString>& args);
 	void newTable(const List<MyString>& args);
+	void openTable(const List<MyString>& args);
+	void startTable(Table& table);
 
 private:
 

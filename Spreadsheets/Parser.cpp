@@ -2,6 +2,10 @@
 #include "Position.h"
 
 CellType Parser::getCellTypeFromInput(const MyString& str) {
+    if (str == "") {
+        return CellType::EmptyCell;
+    }
+
     if (str.isBool()) {
         return CellType::Bool;
     }

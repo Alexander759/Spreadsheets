@@ -29,9 +29,14 @@ public:
 
 	List<Position>& getDependents();
 
+	friend std::ofstream& operator<<(std::ofstream& stream, const Cell& cell);
+	friend std::ifstream& operator>>(std::ifstream& stream, Cell& cell);
+
+
 private:
 
 	static void parseRawContent(Cell& cell);
+	static void handleNoContent(Cell& cell);
 	static void handleBoolContent(Cell& cell);
 	static void handleDoubleContent(Cell& cell);
 	static void handleStringContent(Cell& cell);

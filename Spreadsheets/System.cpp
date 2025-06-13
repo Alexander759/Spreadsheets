@@ -21,8 +21,8 @@ void System::run() {
 		if (commandName == "new") {
 			newTable(args);
 		}
-		else if (command == "open") {
-
+		else if (commandName == "open") {
+			openTable(args);
 		}
 	}
 }
@@ -40,18 +40,66 @@ void System::newTable(const List<MyString>& args) {
 	}
 
 	Table table(config);
+	startTable(table);
+}
+
+void System::openTable(const List<MyString>& args) {
+	if (args.getLength() < 2) {
+		std::cout << "Not enough arguments" << std::endl;
+		return;
+	}
+
+	std::ifstream stream(args[0].getCString(), std::ios::in | std::ios::binary);
+	if (!stream.good() || !stream.is_open()) {
+		std::cout << "Couldn't find file for table" << std::endl;
+		return;
+	}
+
+	Table table;
+	stream >> table;
+	stream.close();
+
+	TableConfigure config(args[1]);
+	if (config.hasError()) {
+		std::cout << config.getErrorMessage() << std::endl;
+		return;
+	}
+	
+	table.setNewConfigure(config);
+
+	startTable(table);
+}
+
+void System::startTable(Table& table) {
 
 	MyString command;
 	while (command != "close") {
 		table.print();
 		std::cin >> command;
-		
+
 		if (command.toLower() == "close") {
 			break;
 		}
 
 		List<MyString> args = command.split();
 		if (args.getLength() == 0) {
+			continue;
+		}
+
+		if (args[0].toLower() == "save") {
+			if (args.getLength() < 2) {
+				std::cout << "Couldn't save to file" << std::endl;
+				continue;
+			}
+
+			std::ofstream stream(args[1].getCString(), std::ios::out | std::ios::binary);
+			if (!stream.good()) {
+				std::cout << "Couldn't save to file" << std::endl;
+				continue;
+			}
+
+			stream << table;
+			stream.close();
 			continue;
 		}
 
@@ -88,5 +136,4 @@ void System::newTable(const List<MyString>& args) {
 			currentCell->setRawContent(args[0]);
 		}
 	}
-
 }

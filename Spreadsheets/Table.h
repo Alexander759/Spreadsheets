@@ -2,6 +2,7 @@
 #include "Cell.h"
 #include "Position.h"
 #include "TableConfigure.h"
+#include <fstream>
 
 class Table {
 public:
@@ -13,7 +14,7 @@ public:
 	Table& operator=(Table&& other);
 	~Table();
 
-	friend class FormulasHolder;
+	void setNewConfigure(const TableConfigure& config);
 
 	Cell* getAtPosition(const Position& position);
 	const Cell* getAtPosition(const Position& position) const;
@@ -24,8 +25,12 @@ public:
 	List<size_t> maxNumberOfCharactersPerColumn() const;
 
 	void setCurrentRowsAndCols(const Position& pos);
-private:
 
+	friend class FormulasHolder;
+	friend std::ofstream& operator<<(std::ofstream& stream, const Table& table);
+	friend std::ifstream& operator>>(std::ifstream& stream, Table& table);
+
+private:
 	void copyFrom(const Table& other);
 	void copyStatic(const Table& other);
 	void free();

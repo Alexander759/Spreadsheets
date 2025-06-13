@@ -409,13 +409,14 @@ void FormulasHolder::onRunConcat(Cell* cell, const List<MyString>& args) {
 			return;
 		}
 
-		result += current->getDisplayContent();
-
-		if (i != pos.getLength() - 1) {
-			result += delim;
+		if (current->getCellType() == CellType::EmptyCell) {
+			continue;
 		}
+
+		result += current->getDisplayContent() + delim;
 	}
 
+	result = result.subStr(0, result.getLength() - 1 - delim.getLength());
 	cell->setCellDisplayAndType(result, CellType::String);
 }
 

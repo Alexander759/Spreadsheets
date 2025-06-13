@@ -56,8 +56,12 @@ public:
 	char operator[](size_t index) const;
 	char& operator[](size_t index);
 
-	friend std::istream& operator>>(std::istream& stream, MyString& other);
-	friend std::ostream& operator<<(std::ostream& stream, const MyString& other);
+	friend std::ofstream& operator<<(std::ofstream& stream, const MyString& str);
+	friend std::ifstream& operator>>(std::ifstream& stream, MyString& str);
+
+
+	friend std::istream& operator>>(std::istream& stream, MyString& str);
+	friend std::ostream& operator<<(std::ostream& stream, const MyString& str);
 private:
 	void copyFrom(const MyString& other);
 	void free();
