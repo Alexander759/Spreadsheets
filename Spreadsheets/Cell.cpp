@@ -33,6 +33,10 @@ const MyString& Cell::getRawContent() const {
 }
 
 void Cell::setRawContent(const MyString& rawContent) {
+    if (this->table == nullptr) {
+        return;
+    }
+
     this->table->setCurrentRowsAndCols(this->position);
     this->rawContent = rawContent;
     parseRawContent(*this);
@@ -60,35 +64,34 @@ List<Position>& Cell::getDependents() {
 }
 
 void Cell::parseRawContent(Cell& cell) {
+    RawContentType rawContentType = Parser::getRawContentTypeFromInput(cell.rawContent);
 
-    CellType cellType = Parser::getCellTypeFromInput(cell.rawContent);
-
-    if (cellType == CellType::EmptyCell) {
+    if (rawContentType == RawContentType::EmptyCell) {
         handleNoContent(cell);
         return;
     }
 
-    if (cellType == CellType::Bool) {
+    if (rawContentType == RawContentType::Bool) {
         handleBoolContent(cell);
         return;
     }
 
-    if (cellType == CellType::Number) {
+    if (rawContentType == RawContentType::Number) {
         handleDoubleContent(cell);
         return;
     }
 
-    if (cellType == CellType::Expression) {
+    if (rawContentType == RawContentType::Expression) {
         handleFormulaContent(cell);
         return;
     }
 
-    if (cellType == CellType::Reference) {
+    if (rawContentType == RawContentType::Reference) {
         handleReferenceContent(cell);
         return;
     }
     
-    if (cellType == CellType::String) {
+    if (rawContentType == RawContentType::String) {
         handleStringContent(cell);
         return;
     }

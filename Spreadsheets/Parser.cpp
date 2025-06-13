@@ -1,32 +1,33 @@
 #include "Parser.h"
 #include "Position.h"
+#include "RawContentType.h"
 
-CellType Parser::getCellTypeFromInput(const MyString& str) {
+RawContentType Parser::getRawContentTypeFromInput(const MyString& str) {
     if (str == "") {
-        return CellType::EmptyCell;
+        return RawContentType::EmptyCell;
     }
 
     if (str.isBool()) {
-        return CellType::Bool;
+        return RawContentType::Bool;
     }
 
     if (str.isDouble()) {
-        return CellType::Number;
+        return RawContentType::Number;
     }
 
     if (str[0] == '=' && str.indexOf('(') != -1 && str.indexOf('(') < str.indexOf(')')) {
-        return CellType::Expression;
+        return RawContentType::Expression;
     }
 
     if (str[0] == '=') {
-        return CellType::Reference;
+        return RawContentType::Reference;
     }
 
     if (str[0] == '"' && str[str.getLength() - 1] == '"') {
-        return CellType::String;
+        return RawContentType::String;
     }
 
-    return CellType::Error;
+    return RawContentType::Error;
 }
 
 ArgumentType Parser::getArgumentType(const MyString& str) {
@@ -58,7 +59,7 @@ ArgumentType Parser::getArgumentType(const MyString& str) {
 }
 
 MyString Parser::getExpressionName(const MyString& str) {
-    if (Parser::getCellTypeFromInput(str) != CellType::Expression) {
+    if (Parser::getRawContentTypeFromInput(str) != RawContentType::Expression) {
         return MyString();
     }
 

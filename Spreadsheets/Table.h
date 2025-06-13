@@ -14,8 +14,6 @@ public:
 	Table& operator=(Table&& other);
 	~Table();
 
-	void setNewConfigure(const TableConfigure& config);
-
 	Cell* getAtPosition(const Position& position);
 	const Cell* getAtPosition(const Position& position) const;
 

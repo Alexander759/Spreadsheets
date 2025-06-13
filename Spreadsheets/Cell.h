@@ -1,7 +1,6 @@
 #pragma once
 #include "MyString.h"
 #include "CellType.h"
-#include "Event.hpp"
 #include "ChangeContentArgs.h"
 #include "Position.h"
 
@@ -10,8 +9,6 @@ class Table;
 class Cell {
 public:
 	Cell();
-
-	friend class FormulasHolder;
 
 	void setTable(Table* table);
 
@@ -29,9 +26,9 @@ public:
 
 	List<Position>& getDependents();
 
+	friend class FormulasHolder;
 	friend std::ofstream& operator<<(std::ofstream& stream, const Cell& cell);
 	friend std::ifstream& operator>>(std::ifstream& stream, Cell& cell);
-
 
 private:
 

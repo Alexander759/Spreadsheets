@@ -1,10 +1,9 @@
 #pragma once
 #include "Table.h"
-#include "Command.h"
 
 class System {
 public:
-	System();
+	System() = default;
 
 	void run();
 
@@ -12,9 +11,4 @@ public:
 	void newTable(const List<MyString>& args);
 	void openTable(const List<MyString>& args);
 	void startTable(Table& table);
-
-private:
-
-	List<Command> commandsApp;
-	List<Command> commandsTable;
 };

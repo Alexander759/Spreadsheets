@@ -1,12 +1,13 @@
 #pragma once
 #include "CellType.h"
+#include "RawContentType.h"
 #include "MyString.h"
 #include "ArgumentType.h"
 #include "Position.h"
 
 class Parser {
 public:
-	static CellType getCellTypeFromInput(const MyString& str);
+	static RawContentType getRawContentTypeFromInput(const MyString& str);
 	static ArgumentType getArgumentType(const MyString& str);
 
 	static MyString getExpressionName(const MyString& str);

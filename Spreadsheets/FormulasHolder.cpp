@@ -19,11 +19,13 @@ const List<Formula>& FormulasHolder::getFormulas() {
 void FormulasHolder::setFormulas() {
 	FormulasHolder::formulas.add(Formula("SUM", onRunSum, onChangeSum));
 	FormulasHolder::formulas.add(Formula("AVERAGE", onRunAverage, onChangeAverage));
+	FormulasHolder::formulas.add(Formula("AVG", onRunAverage, onChangeAverage));
 	FormulasHolder::formulas.add(Formula("MIN", onRunMin, onChangeMin));
 	FormulasHolder::formulas.add(Formula("MAX", onRunMax, onChangeMax));
 	FormulasHolder::formulas.add(Formula("LEN", onRunLen, onChangeLen));
 	FormulasHolder::formulas.add(Formula("CONCAT", onRunConcat, onChangeConcat));
 	FormulasHolder::formulas.add(Formula("SUBSTR", onRunSubstr, onChangeSubstr));
+	FormulasHolder::formulas.add(Formula("SUBSTRING", onRunSubstr, onChangeSubstr));
 	FormulasHolder::formulas.add(Formula("COUNT", onRunCount, onChangeCount));
 }
 
@@ -461,9 +463,9 @@ void FormulasHolder::onRunSubstr(Cell* cell, const List<MyString>& args) {
 		argument = referencedCell->getDisplayContent();
 	}
 
-	size_t endIndex = startIndex + length;
+	size_t endIndex = startIndex + length - 1;
 
-	if (argument.getLength() < endIndex) {
+	if (argument.getLength() <= endIndex) {
 		makeCellInvalid(cell);
 		return;
 	}

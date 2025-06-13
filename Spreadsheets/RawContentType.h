@@ -1,9 +1,11 @@
 #pragma once
 
-enum class CellType {
+enum class RawContentType {
 	EmptyCell,
 	Number,
 	Bool,
 	String,
+	Reference,
+	Expression,
 	Error
 };

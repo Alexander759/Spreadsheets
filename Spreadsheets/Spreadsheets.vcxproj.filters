@@ -60,9 +60,6 @@
     <ClCompile Include="System.h">
       <Filter>Header Files</Filter>
     </ClCompile>
-    <ClCompile Include="Command.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="System.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -84,9 +81,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Property.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Event.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="CellType.h">
@@ -113,7 +107,7 @@
     <ClInclude Include="FormulasHolder.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Command.h">
+    <ClInclude Include="RawContentType.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

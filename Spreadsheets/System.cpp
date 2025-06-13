@@ -1,10 +1,6 @@
 #include "System.h"
 #include <iostream>
 
-System::System() {
-
-}
-
 void System::run() {
 	MyString command;
 
@@ -49,23 +45,22 @@ void System::openTable(const List<MyString>& args) {
 		return;
 	}
 
-	std::ifstream stream(args[0].getCString(), std::ios::in | std::ios::binary);
-	if (!stream.good() || !stream.is_open()) {
-		std::cout << "Couldn't find file for table" << std::endl;
-		return;
-	}
-
-	Table table;
-	stream >> table;
-	stream.close();
 
 	TableConfigure config(args[1]);
 	if (config.hasError()) {
 		std::cout << config.getErrorMessage() << std::endl;
 		return;
 	}
-	
-	table.setNewConfigure(config);
+	Table table(config);
+
+	std::ifstream stream(args[0].getCString(), std::ios::in | std::ios::binary);
+	if (!stream.good() || !stream.is_open()) {
+		std::cout << "Couldn't find file for table" << std::endl;
+		return;
+	}
+
+	stream >> table;
+	stream.close();
 
 	startTable(table);
 }
