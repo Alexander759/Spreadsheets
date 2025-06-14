@@ -101,7 +101,7 @@ MyString::MyString(double num) {
 			}
 		}
 
-		afterDecimal = afterDecimal.subStr(0, lastZeroIndex);
+		afterDecimal = afterDecimal.subStr(0, lastZeroIndex - 1);
 		*this += afterDecimal;
 	}
 
@@ -111,6 +111,10 @@ MyString::MyString(double num) {
 }
 
 MyString::MyString(const char* content) {
+	if (content == nullptr) {
+		throw std::invalid_argument("Nullptrs can't be referenced");
+	}
+
 	this->length = strlen(content);
 	this->content = new char[this->length + 1];
 	strcpy_s(this->content, this->length + 1, content);
@@ -417,6 +421,10 @@ bool MyString::isSizeT() const {
 }
 
 size_t MyString::toSizeT() const {
+	if (!this->isSizeT()) {
+		throw std::invalid_argument("Can't convert to size_t");
+	}
+	
 	size_t result = 0;
 	for (size_t i = 0; i < length; i++) {
 		if (this->content[i] == ' ') {
