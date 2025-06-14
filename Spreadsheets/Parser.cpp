@@ -4,7 +4,7 @@
 
 RawContentType Parser::getRawContentTypeFromInput(const MyString& str) {
     if (str == "") {
-        return RawContentType::EmptyCell;
+        return RawContentType::EmptyContent;
     }
 
     if (str.isBool()) {

@@ -10,6 +10,7 @@ MyString Cell::errorStateMessage = "#VALUE!";
 Cell::Cell() {
     this->type = CellType::EmptyCell;
     this->activeFunction = nullptr;
+    this->table = nullptr;
 }
 
 void Cell::setTable(Table* table) {
@@ -64,9 +65,13 @@ List<Position>& Cell::getDependents() {
 }
 
 void Cell::parseRawContent(Cell& cell) {
+    if (cell.table == nullptr) {
+        return;
+    }
+
     RawContentType rawContentType = Parser::getRawContentTypeFromInput(cell.rawContent);
 
-    if (rawContentType == RawContentType::EmptyCell) {
+    if (rawContentType == RawContentType::EmptyContent) {
         handleNoContent(cell);
         return;
     }

@@ -1,7 +1,7 @@
 #pragma once
 
 enum class RawContentType {
-	EmptyCell,
+	EmptyContent,
 	Number,
 	Bool,
 	String,

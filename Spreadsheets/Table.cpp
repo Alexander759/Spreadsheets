@@ -147,36 +147,52 @@ void Table::printRow(const List<size_t>& maxSymbols, int i) const {
 		size_t emptySpacesLength = maxSymbols[j] - currentLength;
 
 		if (this->alignment == Alignment::Center || i == 0 || j == 0) {
-			for (size_t i = 0; i < emptySpacesLength / 2; i++) {
-				std::cout << " ";
-			}
-
-			if (emptySpacesLength % 2 == 1) {
-				std::cout << " ";
-			}
-
-			std::cout << cellPtr->getDisplayContent();
-
-			for (size_t i = 0; i < emptySpacesLength / 2; i++) {
-				std::cout << " ";
-			}
+			printContentCenter(cellPtr, emptySpacesLength);
 		}
-		else if (this->alignment == Alignment::Left) {
-			std::cout << cellPtr->getDisplayContent();
-
-			for (size_t i = 0; i < emptySpacesLength; i++) {
-				std::cout << " ";
-			}
+		else if (this->alignment == Alignment::Right) {
+			printContentRight(cellPtr, emptySpacesLength);
 		}
 		else {
-			for (size_t i = 0; i < emptySpacesLength; i++) {
-				std::cout << " ";
-			}
-
-			std::cout << cellPtr->getDisplayContent();
+			printContentLeft(cellPtr, emptySpacesLength);
 		}
 	}
 	std::cout << "|\n";
+}
+
+void Table::printContentCenter(const Cell* cellPtr, size_t emptySpacesLength) const {
+	if (cellPtr == nullptr) {
+		return;
+	}
+
+	for (size_t i = 0; i < emptySpacesLength / 2; i++) {
+		std::cout << " ";
+	}
+
+	if (emptySpacesLength % 2 == 1) {
+		std::cout << " ";
+	}
+
+	std::cout << cellPtr->getDisplayContent();
+
+	for (size_t i = 0; i < emptySpacesLength / 2; i++) {
+		std::cout << " ";
+	}
+}
+
+void Table::printContentLeft(const Cell* cellPtr, size_t emptySpacesLength) const {
+	std::cout << cellPtr->getDisplayContent();
+
+	for (size_t i = 0; i < emptySpacesLength; i++) {
+		std::cout << " ";
+	}
+}
+
+void Table::printContentRight(const Cell* cellPtr, size_t emptySpacesLength) const {
+	for (size_t i = 0; i < emptySpacesLength; i++) {
+		std::cout << " ";
+	}
+
+	std::cout << cellPtr->getDisplayContent();
 }
 
 List<size_t> Table::maxNumberOfCharactersPerColumn() const {

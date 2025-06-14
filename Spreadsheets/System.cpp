@@ -28,6 +28,11 @@ bool System::validateOpenTable(const List<MyString>& args) {
 }
 
 void System::newTable(const List<MyString>& args) {
+	if (args.getLength() < 1) {
+		std::cout << "Not enough arguments" << std::endl;
+		return;
+	}
+	
 	TableConfigure config(args[0]);
 
 	if (config.hasError()) {
@@ -44,7 +49,6 @@ void System::openTable(const List<MyString>& args) {
 		std::cout << "Not enough arguments" << std::endl;
 		return;
 	}
-
 
 	TableConfigure config(args[1]);
 	if (config.hasError()) {
@@ -67,9 +71,16 @@ void System::openTable(const List<MyString>& args) {
 
 void System::startTable(Table& table) {
 
+	bool mustPrint = true;
 	MyString command;
 	while (command != "close") {
-		table.print();
+		if (mustPrint) {
+			table.print();
+		}
+		else {
+			mustPrint = true;
+		}
+
 		std::cin >> command;
 
 		if (command.toLower() == "close") {
@@ -82,6 +93,7 @@ void System::startTable(Table& table) {
 		}
 
 		if (args[0].toLower() == "save") {
+			mustPrint = false;
 			if (args.getLength() < 2) {
 				std::cout << "Couldn't save to file" << std::endl;
 				continue;
@@ -100,6 +112,7 @@ void System::startTable(Table& table) {
 
 		if (!Position::isPosition(args[0])) {
 			std::cout << "Invalid input" << std::endl;
+			mustPrint = false;
 			continue;
 		}
 

@@ -20,6 +20,9 @@ public:
 	void print() const;
 	void printRowBorder(const List<size_t>& maxSymbols) const;
 	void printRow(const List<size_t>& maxSymbols, int i) const;
+	void printContentCenter(const Cell* cellPtr, size_t emptySpacesLength) const;
+	void printContentLeft(const Cell* cellPtr, size_t emptySpacesLength) const;
+	void printContentRight(const Cell* cellPtr, size_t emptySpacesLength) const;
 	List<size_t> maxNumberOfCharactersPerColumn() const;
 
 	void setCurrentRowsAndCols(const Position& pos);

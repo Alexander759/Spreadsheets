@@ -2,12 +2,6 @@
 #include <iostream>
 #include <fstream>
 
-List<MyString> Reader::readCommand() {
-    MyString command;
-    std::cin >> command;
-    return command.split();
-}
-
 List<List<MyString>> Reader::readProperties(const MyString& fileName) {
     std::ifstream stream(fileName.getCString(), std::ios::in);
 
