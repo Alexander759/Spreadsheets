@@ -259,7 +259,7 @@ template<class T>
 template<typename CallableType>
 inline T& List<T>::FirstOrDefault(CallableType func) {
 	if (this->length == 0) {
-		std::runtime_error("List is empty");
+		throw std::runtime_error("List is empty");
 	}
 
 	for (size_t i = 0; i < length; i++) {
